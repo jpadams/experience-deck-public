@@ -1,0 +1,48 @@
+/* Neo4j "A Template for All Nodes" — drop-in CSS tokens for a web slide deck.
+   Source of truth: the template's theme1.xml colour scheme, its embedded
+   fonts, and master/layout geometry (see ../reference/brand-system.md).
+   Stage = 1600×900 px (16:9). 1pt in the template = 2.222px on this stage. */
+
+/* Google Fonts — the template embeds Syne (Bold) and Public Sans
+   (Thin/Light/Regular/SemiBold). Load exactly these weights:
+   https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Public+Sans:wght@100;300;400;500;600;700&display=swap */
+
+:root {
+  --font-display: "Syne", "Public Sans", system-ui, sans-serif;   /* hero + statement titles only */
+  --font-sans: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace; /* not in template; code only */
+
+  /* Theme colour scheme "Simple Light" */
+  --ink: #181414;      /* dk1 — body text on light */
+  --ink-2: #4f4d4e;    /* lt1 — secondary text */
+  --ink-3: #8c8886;    /* derived tertiary */
+  --cream: #f2ead4;    /* dk2 — section-divider background */
+  --paper: #fcf9f6;    /* lt2 — off-white surface / cards */
+  --navy: #014063;     /* accent1 — title-slide background */
+  --teal: #0a6190;     /* accent2 — primary blue: blobs, agenda/emphasis background, links */
+  --teal2: #4c99a4;    /* accent3 — secondary teal: divider blob, closing wave */
+  --cyan: #8fe3e8;     /* accent4 — wave / blobs on teal */
+  --blue: #6a82ff;     /* accent5 */
+  --yellow: #faff00;   /* accent6 — agenda numerals, kickers on dark */
+
+  /* Semantic colours the template uses on its own slides */
+  --coral: #d43300;    /* negative */
+  --green: #6fa646;    /* positive (fills/borders) */
+  --green-ink: #4b7d2a;/* positive text on white */
+  --amber: #ffa802;
+
+  --fg: var(--ink); --fg-secondary: var(--ink-2); --fg-tertiary: var(--ink-3);
+  --fg-border: #e4dfd3; --bg: #fff; --bg-muted: #f6f3ec;
+}
+
+/* Type scale (template pt → stage px):
+   hero title    Syne 700           52–56pt → 92–124px   (we use 92 for two-line titles)
+   section title Syne 700           42–52pt → 93–115px   (statement slides: 60px lead)
+   content title Public Sans 600    28pt    → 56–62px
+   body          Public Sans 300/400 16pt   → 28–36px
+   agenda number Public Sans 100    48pt    → 68–107px, colour accent6
+   footer        Public Sans 400    8pt     → 14–18px                               */
+
+/* Layout geometry (stage px):
+   side margin 64 · title top 48 (h 96) · body 208→808 · footer baseline 854
+   hero title block x 159 y 281 w 1312 · agenda body x 467                          */

@@ -1,0 +1,20 @@
+/* Light-mode design tokens consumed by the Flow engine and diagrams.
+   Colours follow the Neo4j template theme (see src/index.css). */
+.flow-scope {
+  --rlh: 1.5rem;
+  --micro: 0.7rem;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+
+  --fg: #181414;
+  --fg-secondary: #4f4d4e;
+  --fg-tertiary: #8c8886;
+  --fg-border: #e4dfd3;
+  --bg: #ffffff;
+  --bg-muted: #f6f3ec;
+
+  --accent: #0a6190;     /* accent2 — primary */
+  --accent-1: #d43300;   /* negative / error */
+  --accent-2: #6fa646;   /* positive / result */
+  --accent-3: #ffa802;   /* waiting / tool */
+  --accent-4: #6a82ff;   /* accent5 */
+}

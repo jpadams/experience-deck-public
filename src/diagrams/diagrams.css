@@ -1,0 +1,431 @@
+/* Shared diagram visuals for the Experience/Knowledge deck. Sizes are in
+   stage design units via --flow-u unless noted. Diagrams are drawn for the
+   light slide surface (var(--fg) etc. from index.css). */
+.dg-svg text { font-family: var(--font-sans); font-weight: 600; font-size: 7px; fill: var(--fg-secondary); letter-spacing: 0.06em; }
+.dg-svg .wire { stroke: var(--fg-border); stroke-width: 1.4; vector-effect: non-scaling-stroke; fill: none; }
+.dg-svg .label { font-size: 7.5px; fill: var(--fg-tertiary); letter-spacing: 0.1em; text-transform: uppercase; }
+.dg-solo { width: 1040px; max-width: 100%; align-self: center; }
+.dg-wide { width: 1200px; max-width: 100%; align-self: center; }
+.dg-distill { width: 1300px; max-width: 100%; align-self: center; }
+.flow-scope { margin: 0 !important; border: 0; padding: 0; align-items: center; width: 100%; }
+.flow-scope > [class*="root"] { width: 100%; display: flex; justify-content: center; }
+
+/* ── Trace stream: abundance ─────────────────────────────────────── */
+.ts-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform, opacity;
+}
+.ts-chip {
+  height: calc(var(--flow-u) * 27);
+  padding: 0 calc(var(--flow-u) * 11);
+  border-radius: calc(var(--flow-u) * 13);
+  display: inline-flex; align-items: center;
+  border: 2px solid var(--fg-border);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: calc(var(--flow-u) * 8.6);
+  color: var(--fg);
+  white-space: nowrap;
+}
+/* --ts-rot (0 → 1, set per frame) mixes every colour toward one midtone gray. */
+.ts-layer { position: absolute; inset: 0; --ts-rot: 0; --ts-gray: #9a9795; --ts-mix: calc(var(--ts-rot) * 100%); }
+.ts-chip { --ts-c: var(--fg-border); border-color: color-mix(in srgb, var(--ts-gray) var(--ts-mix), var(--ts-c)); color: color-mix(in srgb, var(--ts-gray) var(--ts-mix), var(--fg)); background: color-mix(in srgb, #d9d7d5 var(--ts-mix), var(--bg)); }
+.ts-chip.chat { --ts-c: var(--amber); }
+.ts-chip.tool { --ts-c: var(--teal); }
+.ts-chip.code { --ts-c: var(--blue); }
+.ts-chip.fail { --ts-c: var(--coral); }
+.ts-chip.obs { --ts-c: var(--fg-tertiary); }
+.ts-caption { font-family: var(--font-sans); font-size: 14px; font-weight: 600; fill: var(--teal); letter-spacing: 0.12em; text-transform: uppercase; }
+/* .dg-svg text sets the visible fill; match its specificity so the labels rot too. */
+.dg-svg text.ts-caption { fill: color-mix(in srgb, var(--ts-gray) var(--ts-mix), var(--fg-secondary)); }
+
+/* ── Distillation: two columns + arrow ───────────────────────────── */
+.xk-chip {
+  padding: 11px 22px;
+  border-radius: 14px;
+  border: 1.5px solid var(--fg-border);
+  background: var(--bg);
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--fg-secondary);
+  white-space: nowrap;
+}
+.xk-chip.raw { border-style: dashed; color: var(--fg-secondary); background: var(--paper); }
+.xk-chip.known { border-color: var(--teal); color: var(--navy); background: rgba(10, 97, 144, 0.07); font-weight: 600; }
+.xk-svg .label { font-size: 14px; letter-spacing: 0.16em; }
+.xk-rail { stroke: var(--fg-border); stroke-width: 1; stroke-dasharray: 2 6; }
+.xk-arrow { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.xk-arrow svg line { stroke: var(--teal); stroke-width: 2.5; }
+.xk-arrow svg path { fill: var(--teal); }
+.xk-arrow-label { font-family: var(--font-sans); font-weight: 700; font-size: 15px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); white-space: nowrap; }
+
+/* ── Graph workbench: runs → one graph → repeated path → skill ────── */
+.gw-svg .label { font-size: 13px; letter-spacing: 0.14em; }
+.gw-bench { fill: var(--paper); stroke: var(--fg-border); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.gw-rail { stroke: var(--fg-border); stroke-width: 2; }
+.gw-ghost { fill: var(--fg-border); stroke: none; }
+.gw-ghost.task { fill: var(--navy); }
+.gw-ghost.filter, .gw-ghost.search { fill: rgba(111, 166, 70, 0.55); }
+.gw-ghost.ok { fill: var(--green); }
+.gw-ghost.fail { fill: rgba(212, 51, 0, 0.45); }
+.gw-ghost.retry { fill: none; stroke: var(--coral); stroke-width: 1.5; stroke-dasharray: 2 2; }
+.gw-run { font-family: var(--font-sans); font-weight: 600; font-size: 13px; fill: var(--fg-tertiary); text-anchor: end; letter-spacing: 0.04em; }
+.gw-edge line { stroke: var(--fg-tertiary); opacity: 0.7; transition: stroke 300ms ease, opacity 300ms ease; }
+.gw-edge[data-hot="true"] line { stroke: var(--green-ink); opacity: 1; }
+.gw-badge-bg { fill: var(--bg); stroke: var(--fg-border); stroke-width: 1.2; }
+.gw-edge[data-hot="true"] .gw-badge-bg { stroke: var(--green-ink); }
+.gw-badge { font-family: var(--font-sans); font-weight: 700; font-size: 13px; fill: var(--fg-secondary); }
+.gw-edge[data-hot="true"] .gw-badge { fill: var(--green-ink); }
+.gw-node-label { font-family: var(--font-sans); font-weight: 600; font-size: 16px; fill: var(--fg-secondary); letter-spacing: 0.01em; }
+.gw-node {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--bg); border: 2.5px solid var(--fg-tertiary);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+.gw-node.task { border-color: var(--navy); background: var(--navy); }
+.gw-node.filter, .gw-node.search, .gw-node.ok { border-color: var(--green-ink); background: rgba(111, 166, 70, 0.25); }
+.gw-node.ok { background: var(--green); }
+.gw-node.fail { border-color: var(--coral); background: rgba(212, 51, 0, 0.14); }
+.gw-node.retry { border-color: var(--coral); border-style: dashed; }
+.gw-node.guess, .gw-node.docs { border-color: var(--fg-tertiary); }
+.gw-pattern { font-family: var(--font-sans); font-weight: 700; font-size: 17px; fill: var(--green-ink); letter-spacing: 0.02em; }
+.gw-prov { stroke: var(--green-ink); stroke-width: 1.5; stroke-dasharray: 3 5; opacity: 0.8; }
+.gw-asset {
+  width: 280px; padding: 12px 18px 12px; border-radius: 14px;
+  border: 2px solid var(--green); background: rgba(111, 166, 70, 0.1);
+  font-family: var(--font-sans); display: flex; flex-direction: column; gap: 3px;
+  --asset: var(--green-ink);
+}
+.gw-asset.gds { border-color: var(--teal2); background: rgba(76, 153, 164, 0.1); --asset: var(--teal); }
+.gw-asset.data { border-color: var(--blue); background: rgba(106, 130, 255, 0.08); --asset: #4a5fd6; }
+.gw-asset-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--asset); }
+.gw-asset-title { font-size: 20px; font-weight: 700; color: var(--fg); letter-spacing: -0.01em; }
+.gw-asset-sub { font-family: var(--font-mono); font-size: 12.5px; color: var(--fg-secondary); }
+.gw-asset-foot { font-size: 12px; font-weight: 600; color: var(--asset); margin-top: 2px; }
+.gw-prov { stroke: var(--fg-tertiary); }
+
+/* ── Shared arrow strokes (used by Error compounds) ──────────────── */
+path.pl-arrow, .pl-arrow path { stroke: var(--fg-border); stroke-width: 1.8; fill: none; }
+path.pl-arrow.on, .pl-arrow.on path { stroke: var(--teal); stroke-width: 2.4; }
+path.pl-loop, .pl-loop path { stroke: var(--coral); stroke-width: 1.8; fill: none; stroke-dasharray: 4 3; }
+.pl-loop text { fill: var(--coral); }
+
+/* ── Error compounds (1300u stage, units are px) ─────────────────── */
+.ec-svg .label { font-size: 15px; letter-spacing: 0.16em; font-weight: 700; }
+.ec-svg path.pl-arrow { stroke-width: 2.6; }
+.ec-svg path.pl-arrow.on { stroke-width: 3.2; }
+.ec-svg path.pl-loop { stroke-width: 2.6; stroke-dasharray: 7 6; }
+.ec-node {
+  padding: 12px 26px;
+  border-radius: 12px;
+  border: 2.5px solid var(--fg-border);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.ec-node.good { border-color: var(--green); color: var(--green-ink); background: rgba(111, 166, 70, 0.1); }
+.ec-node.bad { border-color: var(--coral); color: var(--coral); background: rgba(212, 51, 0, 0.06); }
+.ec-node.neutral { border-color: var(--fg-tertiary); }
+
+:root { --lime-ink: var(--green-ink); } /* SearchPrune.tsx references it inline */
+
+/* ── Search & prune: fan-out, prune in place, converge (1400u stage, units are px) */
+.sp-svg .label { font-size: 13px; letter-spacing: 0.14em; }
+.sp-svg .wire { stroke-width: 2; }
+.sp-lit { stroke: var(--teal); stroke-width: 3; fill: none; vector-effect: non-scaling-stroke; transition: stroke 300ms ease; }
+.sp-lit.ok { stroke: var(--green-ink); }
+.sp-node {
+  border: 2.5px solid var(--fg-tertiary);
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 12px 24px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  white-space: nowrap;
+  text-align: center;
+}
+.sp-node.recipe { border-color: var(--green); background: #eff5ea; padding: 14px 26px; }
+.sp-recipe-title { font-size: 21px; color: var(--green-ink); letter-spacing: -0.01em; }
+.sp-recipe-sub { font-family: var(--font-mono); font-weight: 500; font-size: 13px; color: var(--fg-secondary); margin-top: 5px; letter-spacing: 0.01em; }
+.sp-recipe-sub + .sp-recipe-sub { margin-top: 2px; }
+.sp-chip {
+  display: inline-flex; align-items: center; gap: 10px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 20px;
+  border: 2.5px solid var(--teal);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--fg);
+  white-space: nowrap;
+  transition: border-color 260ms ease, background 260ms ease, color 260ms ease;
+}
+.sp-reason { display: none; font-weight: 500; color: var(--coral); }
+/* Solid white pills so the lane line never shows through the text. */
+[data-flow-state="fail"] .sp-chip { border-color: var(--coral); border-style: dashed; color: var(--fg-tertiary); background: #fff; }
+[data-flow-state="fail"] .sp-reason { color: #c94a24; }
+[data-flow-state="fail"] .sp-label { text-decoration: line-through; }
+[data-flow-state="fail"] .sp-reason { display: inline; }
+[data-flow-state="ok"] .sp-chip { border-color: var(--green-ink); background: #e9f2e1; }
+.sp-tally { font-family: var(--font-sans); font-weight: 600; font-size: 14px; letter-spacing: 0.06em; color: var(--fg-tertiary); white-space: nowrap; }
+
+/* ── Learning loop: run → trajectories → distill → knowledge → run ─
+   Stage is 1400u rendered at 1400px; sizes below are legible at that scale. */
+.dg-loop { width: 1400px; max-width: 100%; align-self: center; }
+.ll-svg .label { font-size: 13px; letter-spacing: 0.14em; }
+.ll-edge { stroke: var(--fg-border); stroke-width: 2.2; fill: none; }
+.ll-edge.back { stroke: var(--green-ink); stroke-dasharray: 6 5; }
+.ll-node {
+  width: calc(var(--flow-u) * 300);
+  min-height: calc(var(--flow-u) * 140);
+  border: 2px solid var(--fg-border);
+  border-radius: calc(var(--flow-u) * 14);
+  background: var(--bg);
+  padding: calc(var(--flow-u) * 14) calc(var(--flow-u) * 18);
+  display: flex; flex-direction: column; justify-content: center; gap: calc(var(--flow-u) * 8);
+  font-family: var(--font-sans);
+}
+.ll-title { font-size: calc(var(--flow-u) * 15); font-weight: 700; color: var(--fg); letter-spacing: 0.02em; }
+.ll-sub { font-family: var(--font-sans); font-weight: 500; font-size: calc(var(--flow-u) * 11); color: var(--fg-tertiary); letter-spacing: 0.02em; }
+.ll-node.run { border-color: var(--teal); }
+.ll-node.run .ll-title { color: var(--teal); }
+.ll-node.traj { border-color: var(--fg-tertiary); }
+.ll-node.distill { border-color: var(--blue); }
+.ll-node.distill .ll-title { color: var(--blue); }
+.ll-node.know { border-color: var(--green); background: rgba(111, 166, 70, 0.12); }
+.ll-node.know .ll-title { color: var(--green-ink); }
+.ll-meter { display: grid; grid-template-columns: calc(var(--flow-u) * 62) 1fr calc(var(--flow-u) * 58); align-items: center; gap: calc(var(--flow-u) * 8); }
+.ll-k { font-family: var(--font-sans); font-weight: 600; font-size: calc(var(--flow-u) * 10); color: var(--fg-tertiary); text-transform: uppercase; letter-spacing: 0.08em; }
+.ll-v { font-family: var(--font-sans); font-weight: 700; font-size: calc(var(--flow-u) * 12); color: var(--fg); text-align: right; font-variant-numeric: tabular-nums; }
+.ll-bar { height: calc(var(--flow-u) * 12); border-radius: 999px; background: var(--bg-muted); overflow: hidden; }
+.ll-fill { height: 100%; border-radius: 999px; transition: width 520ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ll-fill.steps { background: var(--coral); }
+.ll-fill.success { background: var(--green); }
+.ll-cells { display: flex; gap: calc(var(--flow-u) * 7); margin-top: calc(var(--flow-u) * 2); }
+.ll-cell { width: calc(var(--flow-u) * 34); height: calc(var(--flow-u) * 16); border-radius: calc(var(--flow-u) * 4); background: var(--fg-border); transition: background 360ms ease, transform 360ms ease; }
+.ll-cell[data-on="true"] { background: var(--green-ink); transform: translateY(-1px); }
+.ll-count { font-family: var(--font-sans); font-weight: 700; font-size: calc(var(--flow-u) * 12); color: var(--green-ink); }
+.ll-dot {
+  width: calc(var(--flow-u) * 16); height: calc(var(--flow-u) * 16); border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--fg-tertiary);
+  transition: border-color 200ms ease, background 200ms ease;
+}
+[data-flow-state="keep"] .ll-dot { border-color: var(--green-ink); background: var(--green); }
+[data-flow-state="prune"] .ll-dot { border-color: var(--coral); background: rgba(212, 51, 0, 0.18); }
+.ll-packet {
+  padding: calc(var(--flow-u) * 5) calc(var(--flow-u) * 14);
+  border-radius: 999px;
+  background: rgba(111, 166, 70, 0.18); border: 2px solid var(--green-ink);
+  font-family: var(--font-mono); font-weight: 700; font-size: calc(var(--flow-u) * 11);
+  color: var(--green-ink); white-space: nowrap;
+}
+
+/* ── Context graph: three memories in one graph (1400u stage, units are px) */
+.cg-node {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  border: 2.5px solid var(--fg-tertiary);
+  background: var(--bg);
+  font-family: var(--font-sans); font-weight: 600; font-size: 16px; letter-spacing: 0.01em;
+  color: var(--fg); white-space: nowrap;
+}
+.cg-node.st { border-color: var(--teal2); background: #e9f3f4; color: #1f5c66; }
+.cg-node.rs { border-color: var(--blue); background: #eceffd; color: #3746b0; }
+.cg-node.lt { border-color: var(--green); background: #eaf2e2; color: var(--green-ink); }
+.cg-svg .cg-region { font-family: var(--font-sans); font-weight: 700; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; }
+.cg-region.st { fill: var(--teal2); }
+.cg-region.rs { fill: var(--blue); }
+.cg-region.lt { fill: var(--green-ink); }
+.cg-edge line { stroke: var(--fg-tertiary); stroke-width: 2.4; fill: none; }
+.cg-edge.st line { stroke: var(--teal2); }
+.cg-edge.rs line { stroke: var(--blue); }
+.cg-edge.lt line { stroke: var(--green); }
+.cg-edge.x line { stroke: var(--fg-secondary); }
+.cg-edge.dashed line { stroke-dasharray: 8 6; }
+.cg-edge.dotted line { stroke-dasharray: 2 6; stroke-linecap: round; }
+.cg-svg .cg-edge text { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; fill: var(--fg-secondary); }
+.cg-head { fill: var(--fg-tertiary); }
+.cg-head.st { fill: var(--teal2); }
+.cg-head.rs { fill: var(--blue); }
+.cg-head.lt { fill: var(--green); }
+.cg-head.x { fill: var(--fg-secondary); }
+
+/* ── Fork tree: many sessions, one well-worn path (1400u stage, units are px) */
+.ft-svg .label { font-size: 13px; letter-spacing: 0.14em; }
+.ft-edge { fill: none; stroke: var(--teal); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke 300ms ease; }
+.ft-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--teal); border: 2.5px solid #fff;
+  box-shadow: 0 0 0 1.5px var(--teal);
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+[data-flow-state="fail"] .ft-dot { background: #fff; border-color: var(--coral); box-shadow: 0 0 0 1.5px var(--coral); }
+[data-flow-state="ok"] .ft-dot { background: var(--green); box-shadow: 0 0 0 1.5px var(--green-ink); }
+.ft-goal {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2.5px solid var(--green); background: #eff5ea;
+  font-family: var(--font-sans); font-weight: 700; font-size: 22px; color: var(--green-ink);
+}
+.ft-rank {
+  width: 200px; padding: 8px 13px; border-radius: 12px;
+  border: 2px solid var(--teal2); background: var(--bg);
+  font-family: var(--font-sans); text-align: left;
+}
+.ft-rank.best { border-color: var(--green); background: #eff5ea; border-width: 2.5px; }
+.ft-rank-title { font-size: 17px; font-weight: 700; color: #1f5c66; letter-spacing: 0.01em; }
+.ft-rank.best .ft-rank-title { color: var(--green-ink); font-size: 19px; }
+.ft-rank-sub { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--fg-secondary); margin-top: 3px; }
+.ft-rank.runner { transform: scale(0.9); transform-origin: left center; }
+
+/* Landscape inset */
+.ft-land { width: 100%; height: 118px; display: block; }
+.ft-land-fill { fill: rgba(10, 97, 144, 0.07); }
+.ft-land-line { fill: none; stroke: var(--teal); stroke-width: 2; }
+.ft-land-drop { stroke: var(--fg-border); stroke-width: 1; stroke-dasharray: 2 4; }
+.ft-land-dot { fill: #fff; stroke: var(--teal2); stroke-width: 2.5; }
+.ft-land-dot.best { fill: var(--green); stroke: var(--green-ink); }
+.ft-land-txt { font-family: var(--font-sans); font-weight: 600; font-size: 11px; fill: var(--fg-tertiary); letter-spacing: 0.08em; text-transform: uppercase; }
+.ft-land-txt.best { fill: var(--green-ink); }
+
+/* ── Compile: graph (source) → arrow → bits (compiled artifact) (1400u stage, units are px) */
+.cp-svg .label { font-size: 13px; letter-spacing: 0.14em; }
+.cp-compile line { stroke: var(--fg-tertiary); stroke-width: 3; transition: stroke 300ms ease; }
+.cp-compile text { font-family: var(--font-sans); font-weight: 700; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; fill: var(--fg-tertiary); transition: fill 300ms ease; }
+.cp-compile-head { fill: var(--fg-tertiary); transition: fill 300ms ease; }
+.cp-compile[data-hot="true"] line { stroke: var(--green-ink); }
+.cp-compile[data-hot="true"] text { fill: var(--green-ink); }
+.cp-compile[data-hot="true"] .cp-compile-head { fill: var(--green-ink); }
+.cp-bracket path { fill: none; stroke: var(--fg); stroke-width: 3.5; stroke-linecap: square; }
+.cp-bits {
+  position: absolute; display: grid; align-items: center; justify-items: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: 24px; color: var(--fg);
+  font-variant-numeric: tabular-nums; pointer-events: none;
+}
+.cp-bits span { transition: opacity 120ms linear; }
+.cp-packet {
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(111, 166, 70, 0.16); border: 2px solid var(--green-ink);
+  font-family: var(--font-mono); font-weight: 700; font-size: 12px; letter-spacing: 0.08em;
+  color: var(--green-ink); white-space: nowrap;
+}
+
+/* ── Retrieval crowding (1300u stage, units are px) ──────────────── */
+.rc-svg .label { font-size: 15px; letter-spacing: 0.16em; font-weight: 700; }
+.rc-svg path.pl-arrow { stroke: var(--fg-tertiary); stroke-width: 2.6; }
+.rc-box { fill: var(--paper); stroke: var(--fg-border); stroke-width: 2; }
+.rc-box.win { fill: var(--bg); stroke: var(--fg-tertiary); stroke-width: 2.5; }
+.rc-slot { fill: none; stroke: var(--fg-border); stroke-width: 2; stroke-dasharray: 6 5; }
+.rc-chip {
+  width: 150px; height: 32px; border-radius: 16px;
+  display: grid; place-items: center;
+  border: 2px solid var(--fg-border); background: var(--bg);
+  font-family: var(--font-mono); font-weight: 600; font-size: 12.5px;
+  color: var(--fg-secondary); white-space: nowrap;
+  transition: border-color 250ms ease, color 250ms ease, background 250ms ease, box-shadow 250ms ease;
+}
+.rc-chip.slot { width: 204px; height: 42px; border-radius: 21px; font-size: 17px; color: var(--fg); border-color: var(--fg-tertiary); }
+.rc-chip.right { border-color: var(--teal); color: var(--teal); background: rgba(10, 97, 144, 0.08); }
+[data-flow-state="missed"] .rc-chip.right { box-shadow: 0 0 0 5px rgba(10, 97, 144, 0.18); }
+[data-flow-state="bad"] .rc-chip.slot { border-color: var(--coral); color: var(--coral); background: rgba(212, 51, 0, 0.06); }
+.rc-task {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 20px; border-radius: 12px;
+  border: 2.5px solid var(--navy); background: var(--bg);
+  font-family: var(--font-mono); font-weight: 700; font-size: 17px; color: var(--navy); white-space: nowrap;
+}
+.rc-task span { font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-tertiary); }
+.rc-count { font-family: var(--font-sans); font-weight: 700; font-size: 16px; letter-spacing: 0.06em; color: var(--fg); white-space: nowrap; }
+.rc-cap { font-family: var(--font-sans); font-weight: 700; font-size: 20px; white-space: nowrap; }
+.rc-cap.good { color: var(--teal); }
+.rc-cap.bad { color: var(--coral); }
+
+/* ── Provenance trail (1456u stage, units are px) ────────────────── */
+.dg-prov { width: 1456px; max-width: 100%; align-self: center; }
+.pv-svg .label { font-size: 14px; letter-spacing: 0.16em; font-weight: 700; }
+.pv-svg .label.pv-back { fill: var(--teal); }
+.pv-svg path.pl-arrow.on { stroke-width: 2.6; }
+.pv-run { font-family: var(--font-mono) !important; font-size: 15px !important; font-weight: 600; fill: var(--fg-tertiary) !important; letter-spacing: 0 !important; }
+.pv-rail { stroke: var(--fg-border); stroke-width: 2; }
+.pv-span { fill: var(--bg); stroke: var(--fg-border); stroke-width: 2; transition: stroke 300ms ease, fill 300ms ease; }
+.pv-span.bad { stroke: rgba(212, 51, 0, 0.55); }
+.pv-span.ok { stroke: var(--green); }
+.pv-span[data-on="true"] { stroke: var(--teal); stroke-width: 3; fill: #eaf1f6; }
+.pv-span-label { font-family: var(--font-mono) !important; font-size: 14px !important; font-weight: 600; letter-spacing: 0 !important; fill: var(--fg-secondary) !important; }
+.pv-span-label.bad { fill: var(--coral) !important; }
+.pv-span-label.ok { fill: var(--green-ink) !important; }
+.pv-link { fill: none; stroke: var(--teal); stroke-width: 2; stroke-dasharray: 5 5; }
+.pv-card { fill: rgba(111, 166, 70, 0.07); stroke: var(--green); stroke-width: 2.5; }
+.pv-card-title { font-size: 20px !important; font-weight: 700; fill: var(--green-ink) !important; letter-spacing: 0 !important; }
+.pv-tag { font-size: 13px !important; font-weight: 700; letter-spacing: 0.12em !important; text-transform: uppercase; fill: var(--fg-tertiary) !important; }
+.pv-tag.bad { fill: var(--coral) !important; }
+.pv-line { font-family: var(--font-mono) !important; font-size: 16px !important; font-weight: 600; letter-spacing: 0 !important; fill: var(--fg) !important; }
+.pv-cite { font-family: var(--font-mono) !important; font-size: 13px !important; font-weight: 600; letter-spacing: 0 !important; fill: var(--teal) !important; }
+
+/* ── Consolidation (1456u stage, units are px) ───────────────────── */
+.cs-svg .label { font-size: 14px; letter-spacing: 0.16em; font-weight: 700; }
+.cs-svg .label.cs-teal { fill: var(--teal); }
+.cs-svg path.pl-arrow.on { stroke-width: 2.6; }
+.cs-box { fill: var(--paper); stroke: var(--fg-border); stroke-width: 2; }
+.cs-box.bg { fill: var(--bg); stroke: var(--fg-tertiary); stroke-dasharray: 7 6; }
+.cs-shape { stroke-width: 2.5; }
+.cs-shape.sq { fill: rgba(106, 130, 255, 0.18); stroke: var(--blue); }
+.cs-shape.tri { fill: rgba(255, 168, 2, 0.2); stroke: var(--amber); stroke-linejoin: round; }
+.cs-shape.circ { fill: rgba(10, 97, 144, 0.16); stroke: var(--teal); }
+.cs-shape.circ.mem { fill: var(--teal); }
+.cs-mem-halo { fill: rgba(10, 97, 144, 0.1); stroke: var(--teal); stroke-width: 1.5; stroke-dasharray: 3 4; }
+.cs-ring { fill: none; stroke: var(--teal); stroke-width: 2.5; opacity: 0; transition: opacity 300ms ease; }
+.cs-ring[data-on="true"] { opacity: 1; }
+.cs-meter { fill: var(--bg); stroke: var(--fg-border); stroke-width: 2.5; transition: fill 250ms ease, stroke 250ms ease; }
+.cs-meter[data-on="true"] { fill: var(--teal); stroke: var(--teal); }
+.cs-meter-label, .cs-sub { font-size: 13px !important; font-weight: 700; letter-spacing: 0.12em !important; text-transform: uppercase; fill: var(--fg-tertiary) !important; }
+.cs-sub { text-transform: none; letter-spacing: 0.02em !important; font-weight: 600; font-size: 15px !important; }
+.cs-state { font-size: 18px !important; font-weight: 700; letter-spacing: 0.02em !important; fill: var(--fg-tertiary) !important; }
+.cs-state.teal { fill: var(--teal) !important; }
+.cs-req { fill: var(--bg); stroke: var(--fg-tertiary); stroke-width: 2; }
+.cs-req.circ { stroke: var(--teal); stroke-width: 2.5; }
+.cs-req-label { font-size: 15px !important; font-weight: 600; letter-spacing: 0.02em !important; fill: var(--fg-secondary) !important; }
+.cs-served { font-size: 16px !important; font-weight: 700; letter-spacing: 0.02em !important; fill: var(--green-ink) !important; }
+.cs-served.teal { fill: var(--teal) !important; }
+.cs-link { fill: none; stroke: var(--teal); stroke-width: 2.4; stroke-dasharray: 6 5; }
+.cs-fly { width: 27px; height: 27px; border-radius: 50%; border: 2.5px solid var(--teal); background: rgba(10, 97, 144, 0.16); }
+
+/* ── Ladder result art (600×220 canvas) ──────────────────────────── */
+.ra-art { display: block; width: 100%; max-width: 600px; height: auto; margin: 0 auto; }
+.ra-rail { fill: none; stroke: var(--fg-border); stroke-width: 2; }
+.ra-folder { fill: rgba(10, 97, 144, 0.14); stroke: var(--teal); stroke-width: 2; stroke-linejoin: round; }
+.ra-file path { fill: var(--bg); stroke: var(--green-ink); stroke-width: 2; stroke-linejoin: round; }
+.ra-file line { stroke: var(--green); stroke-width: 1.5; }
+.ra-name { font-family: var(--font-mono); font-size: 16px; font-weight: 600; fill: var(--fg); }
+.ra-name.dir { fill: var(--teal); }
+.ra-tag { fill: rgba(111, 166, 70, 0.1); stroke: var(--green); stroke-width: 1.5; }
+.ra-tag-label { font-family: var(--font-sans); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; fill: var(--green-ink); }
+.ra-check-bg { fill: var(--green); }
+.ra-check { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.ra-soil { fill: #e9e0cf; }
+.ra-stem { fill: none; stroke: var(--green-ink); stroke-width: 5; stroke-linecap: round; }
+.ra-branch { fill: none; stroke: var(--green-ink); stroke-width: 3.5; stroke-linecap: round; }
+.ra-branch.dead { stroke: var(--fg-tertiary); opacity: 0.55; }
+.ra-leaf { fill: var(--green); }
+.ra-leaf.small { fill: #8fbf68; }
+.ra-leaf.dead { fill: var(--fg-tertiary); opacity: 0.4; }
+.ra-cut { stroke: var(--coral); stroke-width: 2; stroke-dasharray: 3 3; }
+.ra-shears circle, .ra-shears path { fill: none; stroke: var(--coral); stroke-width: 3; stroke-linecap: round; }
+.ra-can path, .ra-can circle { fill: rgba(10, 97, 144, 0.14); stroke: var(--teal); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.ra-can .ra-can-handle { fill: none; }
+.ra-drop { fill: var(--teal); opacity: 0.75; }
+.ra-label { font-family: var(--font-sans); font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.ra-label.prune { fill: var(--coral); }
+.ra-label.curate { fill: var(--teal); }
